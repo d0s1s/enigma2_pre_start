@@ -116,7 +116,10 @@ actualizar_junglescript() {
 	if [ "$CAMBIOS" -eq 1 ]
 	then
 		MENSAJE="Actualizacion automatica realizada sobre jungleScript"
-		enviar_telegram "${MENSAJE}"
+		if [ "$TELEGRAM" -eq 1 ];
+		then
+			enviar_telegram "${MENSAJE}"
+		fi
 		echo "Copiando fichero jungleScript..."
 		cp $DIR_TMP/$CARPETA/$FICHERO $DESTINO/$FICHERO
 	fi
@@ -251,7 +254,10 @@ diferencias_canales() {
 	then
 		recargar_lista_canales
 		MENSAJE="Actualizacion automatica realizada sobre los canales ${CARPETA}"
-		enviar_telegram "${MENSAJE}"
+		if [ "$TELEGRAM" -eq 1 ];
+		then
+			enviar_telegram "${MENSAJE}"
+		fi
 		enviar_mensaje_pantalla "${MENSAJE}"
 		echo $MENSAJE
 	else
@@ -338,7 +344,10 @@ diferencias_picons() {
 	if [ "${CAMBIOS_RSYNC_1}" -gt 0 ] || [ "${CAMBIOS_RSYNC_2}" -gt 0 ];
 	then
 		MENSAJE="Actualizacion automatica realizada sobre los picons ${RUTA_PICONS}"
-		enviar_telegram "${MENSAJE}"
+		if [ "$TELEGRAM" -eq 1 ];
+		then
+			enviar_telegram "${MENSAJE}"
+		fi
 		echo $MENSAJE
 	else
 		echo "No hay cambios en los picons"
@@ -359,7 +368,10 @@ redimensionamiento_picons() {
 		then
 			python $CARPETA/$FICHERO $RUTA_PICONS
 			MENSAJE="Se han redimensionado los picons en sistema Blackhole"
-			enviar_telegram "${MENSAJE}"
+			if [ "$TELEGRAM" -eq 1 ];
+			then
+				enviar_telegram "${MENSAJE}"
+			fi
 		else
 			echo "Errores al descargar $URL"
 			exit 1
@@ -588,7 +600,10 @@ actualizar_listacanales(){
 			descomprimir_zip
 			renombrar_carpeta
 			merge_lamedb
-			instalar_paquetes
+			if [ "$DEPENDENCIAS" -eq 1 ];
+			then
+				instalar_paquetes
+			fi
 			diferencias_canales
 		else
 			echo "No hay cambios en canales"
@@ -600,7 +615,10 @@ actualizar_listacanales(){
 		descomprimir_zip
 		renombrar_carpeta
 		merge_lamedb
-		instalar_paquetes
+		if [ "$DEPENDENCIAS" -eq 1 ];
+		then
+			instalar_paquetes
+		fi
 		diferencias_canales
 	fi
 }
@@ -630,7 +648,10 @@ actualizar_picons(){
 						wget_github_zip $URL
 						descomprimir_zip
 						renombrar_carpeta
-						instalar_paquetes
+						if [ "$DEPENDENCIAS" -eq 1 ];
+						then
+							instalar_paquetes
+						fi
 						diferencias_picons
 						redimensionamiento_picons
 					else
@@ -648,7 +669,10 @@ actualizar_picons(){
 					wget_github_zip $URL
 					descomprimir_zip
 					renombrar_carpeta
-					instalar_paquetes
+					if [ "$DEPENDENCIAS" -eq 1 ];
+					then
+						instalar_paquetes
+					fi
 					diferencias_picons
 					redimensionamiento_picons
 				else
@@ -664,7 +688,7 @@ actualizar_picons(){
 }
 
 pre_actualizar_junglescript(){
-	URL=https://raw.githubusercontent.com/jungla-team/enigma2_pre_start/master/enigma2_pre_start.sh
+	URL=https://raw.githubusercontent.com/d0s1s/enigma2_pre_start/master/enigma2_pre_start.sh
 	CARPETA=junglescript
 	DESTINO=/usr/bin
 	FICHERO=enigma2_pre_start.sh
@@ -676,7 +700,10 @@ pre_actualizar_junglescript(){
 	then
 		crear_dir_tmp
 		wget_github_file
-		instalar_paquetes
+		if [ "$DEPENDENCIAS" -eq 1 ];
+		then
+			instalar_paquetes
+		fi
 		diferencias_fichero
 	fi
 }
